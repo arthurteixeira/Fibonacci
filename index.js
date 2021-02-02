@@ -1,3 +1,4 @@
+const { performance } = require('perf_hooks');
 const csv = require('csv-writer').createObjectCsvWriter;
 const csvWriter = csv({
     path: 'dados.csv',
@@ -12,13 +13,16 @@ const csvWriter = csv({
 let records = [];
 
 for(let i = 1; i<=20; i++){
-    const ite = iterativa(i);
-    console.log('Pos: ' + i + ' | Iterativa | Resposta: ' + ite);
 
-    const rec = recursiva(i);
-    console.log('Pos: ' + i + ' | Recursiva | Resposta: ' + rec + '\n');
+    let inicioIte = performance.now();
+    const ite = iterativa(i);
+    let fimIte = performance.now();
     
-    records.push({position: i, value: ite, timeIte: ite, timeRec: rec});
+    let inicioRec = performance.now();
+    const rec = recursiva(i);
+    let fimRec = performance.now();
+    
+    records.push({position: i, value: ite, timeIte: fimIte - inicioIte, timeRec: fimRec - inicioRec});
 }
 
 csvWriter.writeRecords(records).then(() => {
