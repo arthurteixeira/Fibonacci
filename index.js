@@ -1,3 +1,4 @@
+const plotlib = require('nodeplotlib');
 const { performance } = require('perf_hooks');
 const csv = require('csv-writer').createObjectCsvWriter;
 const csvWriter = csv({
@@ -12,7 +13,11 @@ const csvWriter = csv({
 
 let records = [];
 
-for(let i = 1; i<=20; i++){
+console.log('Calculando...');
+
+for(let i = 1; i<=42; i++){
+
+    console.log(i);
 
     let inicioIte = performance.now();
     const ite = iterativa(i);
@@ -28,6 +33,28 @@ for(let i = 1; i<=20; i++){
 csvWriter.writeRecords(records).then(() => {
     console.log('Dados enviados ao csv');
 })
+
+let x = [];
+let yI = [];
+let yR = [];
+
+records.map((data) => {
+    x.push(data.position);
+    yI.push(data.timeIte);
+    yR.push(data.timeRec);
+})
+
+const graph = [{
+    x: x,
+    y: yI,
+    type: 'scatter'
+}, {
+    x: x,
+    y: yR,
+    type: 'scatter'
+}];
+
+plotlib.plot(graph);
 
 function recursiva(position) {
     if(position === 1)
